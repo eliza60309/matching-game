@@ -7,16 +7,12 @@ export class Card {
     this.Locks = [];
     this.clickable = true;
     this.destroy = destroy;
-    this.enabled = () => {
-      console.log(this.clickable);
-      return this.clickable;
 
-    }
     this.onClick = () => {
       if(this.clickable) {
         this.onDestroy();
         this.destroy(this);
-        console.log(this.args.id + " is destroyed");
+        //console.log(this.args.id + " is destroyed");
       }
       else {
         console.log("Booy");
@@ -36,24 +32,24 @@ export class Card {
       else {
         this.clickable = false;
       }
-      console.log(`${this.args.id} has ${this.Locks.length} locks`);
+      //console.log(`${this.args.id} has ${this.Locks.length} locks`);
 
     };
   
     this.notifyLinkCreate = (card) => {
       this.Links.push(card);
-      console.log(`Link Created from ${this.args.id} to ${card.args.id}`);
-      console.log(`${this.args.id} has ${this.Links.length} links`);
+      //console.log(`Link Created from ${this.args.id} to ${card.args.id}`);
+      //console.log(`${this.args.id} has ${this.Links.length} links`);
     };
   
     this.notifyLockCreate = (card) => {
       this.Locks.push(card);
       this.clickable = false;
-      console.log(`Lock Created from ${card.args.id} to ${this.args.id}`);
-      console.log(`${this.args.id} has ${this.Locks.length} locks`);
+      //console.log(`Lock Created from ${card.args.id} to ${this.args.id}`);
+      //console.log(`${this.args.id} has ${this.Locks.length} locks`);
     };
 
-    this.button = (<ButtonElement
+    /*this.button = (<ButtonElement
       XStart={this.args.X.start}
       XEnd={this.args.X.end}
       YStart={this.args.Y.start}
@@ -64,35 +60,32 @@ export class Card {
       key={this.args.id}
       enabled={this.enabled}
       card={this}
-    />);
+      test={this.args.test}
+    />);*/
   }
 
   
 };
 
 export const ButtonElement = (props) => {
-  const { XStart, XEnd, YStart, YEnd, Layer } = props;
-  // const [ enabled, setEnabled ] = useState();
-  // useEffect(() => {
-  //   setEnabled(props.card.clickable);
-  //   console.log("121");
-  // }, [props.card.clickable]);
+  const { args, enabled } = props;
+
   return (
     <button
       style={{
         borderWidth: 1,
-        // backgroundColor: enabled? "lightblue": "blue",
-        backgroundColor: "lightblue",
         borderRadius: 5,
+        backgroundColor: enabled? "lightblue": "grey",
+        transition: "background-color 0.5s",
         position: "absolute",
 
-        fontSize: 30,
+        width: args.X.end - args.X.start,
+        height: args.Y.end - args.Y.start,
+        top: args.Y.start,
+        left: args.X.start,
+        zIndex: args.Z,
 
-        width: XEnd - XStart,
-        height: YEnd - YStart,
-        top: YStart,
-        left: XStart,
-        zIndex: Layer
+        fontSize: 30
       }}  
       onClick={props.onClick}
     > 
