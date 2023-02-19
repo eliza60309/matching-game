@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getImg } from "../utils/img";
 
 export class Card {
   constructor(args, destroy) {
@@ -75,9 +76,12 @@ export const ButtonElement = (props) => {
       style={{
         borderWidth: 1,
         borderRadius: 5,
-        backgroundColor: enabled? "lightblue": "grey",
         transition: "background-color 0.5s",
+        backgroundColor: enabled? "lightblue": "grey",
+        display: "flex",
         position: "absolute",
+        alignItems: "center",
+        justifyContent: "center",
 
         width: args.X.end - args.X.start,
         height: args.Y.end - args.Y.start,
@@ -88,8 +92,28 @@ export const ButtonElement = (props) => {
         fontSize: 30
       }}  
       onClick={props.onClick}
+      label={props.label}
     > 
-    {props.text}
+      {/*props.text*/}
+      <img 
+        src={getImg(props.label)}
+        style={{
+          width: args.X.end - args.X.start - 20,
+          height: args.Y.end - args.Y.start - 20,
+        }}
+      />
+      <div
+        style={{
+          transition: "opacity 0.5s",
+          opacity: enabled? "0%": "60%",
+          borderRadius: 5,
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "grey",
+        }}
+      >
+      </div>
     </button>
   );
 }

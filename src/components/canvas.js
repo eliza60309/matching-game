@@ -56,20 +56,6 @@ const CanvasElement = (props) => {
   };
   
 
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:1}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:2}));
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:3}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:4}));
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:5}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:6}));
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:7}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:8}));
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:9}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:10}));
-  // buttonsArr.push(generateLayer({pivotX: 0, pivotY: 0, z:11}));
-  // buttonsArr.push(generateLayer({pivotX: 25, pivotY: 25, z:12}));
-  
-
 
   useEffect(() => {
     if(!toUnmount) {
@@ -83,7 +69,7 @@ const CanvasElement = (props) => {
     let nowID = maxID;
     let nowCards = cards;
     let ret = {};
-    for(let i = 0; i < 5; i++) {
+    for(let i = 0; i < 3; i++) {
       ret = generateLayer({
         startX: 0,
         startY: 0,
@@ -92,18 +78,19 @@ const CanvasElement = (props) => {
       }, nowCards, nowID);
       nowCards = ret.nowCards; 
       nowID = ret.nowID;
-      if(i == 3) {
-        ret = generateLayer({
-          startX: 25,
-          startY: 25,
-          endY: 400,
-          size: 100,
-          z:i * 2 + 2
-        }, nowCards, nowID);
-        nowCards = ret.nowCards; 
-        nowID = ret.nowID;
-        continue;
-      }
+
+      // if(i == 3) {
+      //   ret = generateLayer({
+      //     startX: 25,
+      //     startY: 25,
+      //     endY: 400,
+      //     size: 100,
+      //     z:i * 2 + 2
+      //   }, nowCards, nowID);
+      //   nowCards = ret.nowCards; 
+      //   nowID = ret.nowID;
+      //   continue;
+      // }
       ret = generateLayer({
         startX: 25,
         startY: 25,
@@ -127,30 +114,7 @@ const CanvasElement = (props) => {
 
     setMaxID(nowID);
     setCards(nowCards);
-    /*let newCards = [];
-    newCards.push(new Card({
-      id: 1,
-      X: { start: 0, end: 50 },
-      Y: { start: 0, end: 50 },
-      Z: 1,
-    }, setToUnmount));
-    newCards.push(new Card({
-      id: 2,
-      X: { start: 25, end: 75 },
-      Y: { start: 25, end: 75 },
-      Z: 2
-    }, setToUnmount));
-  
-    newCards[0].notifyLockCreate(newCards[1]);
-    newCards[1].notifyLinkCreate(newCards[0]);
-    //setButtons([...buttons, newCards[0].button, newCards[1].button]);
-    setCards([...cards, ...newCards]);*/
   }, []);
-
-  const execute = () => {
-    //console.log(buttons);
-    //console.log(cards);
-  }
 
   return (  
     <div
@@ -161,17 +125,62 @@ const CanvasElement = (props) => {
         backgroundColor: props.color,
       }}
     >
-    <button onClick={execute}>execute</button>
-    {/*buttons*/}
-    {cards.map((card) => {
-      return (<ButtonElement
-        args={card.args}
-        text={card.args.Z}
-        onClick={card.onClick}
-        key={card.args.id}
-        enabled={card.clickable}
-        />);
-    })}
+      {cards.map((card) => {
+        return (<ButtonElement
+          args={card.args}
+          label={card.args.Z}
+          onClick={card.onClick}
+          key={card.args.id}
+          enabled={card.clickable}
+          />);
+      })}
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bottom: "0%",
+          width: "100%",
+          height: "200px",
+          backgroundColor: "lightblue"
+          
+        }}
+      >
+        <div
+          style={{
+            borderWidth: "1px",
+            borderColor: "black",
+            borderStyle: "solid",
+            borderRadius: "5px",
+            position: "absolute",
+            width: "350px",
+            height: "50px",
+            display: "block",
+            
+            backgroundColor: "lightgreen"
+          }}
+        >
+          {[0, 1, 2, -1, 4, 5, -1].map((imgLabel, index) => {
+              if(imgLabel == -1) {
+                return;
+              }
+              return(
+                <ButtonElement
+                  args={{
+                    id: 1,
+                    X: { start: 50 * index, end: 50 * (index + 1)},
+                    Y: { start: 0, end: 50 },
+                    Z: 1,
+                  }}
+                  label={imgLabel}
+                  onClick={() => {}}
+                  enabled={true}
+                  key={index}
+                />);
+            })}
+        </div>
+      </div>
     </div>
   );
 };
