@@ -10,7 +10,11 @@ const imgList = [
   "./img/ring.png",
   "./img/sword.png",
   "./img/treasure-chest.png",
-  "./img/witch-hat.png"
+  "./img/witch-hat.png",
+  "./img/diamond.png",
+  "./img/gold-ingots.png",
+  "./img/potion.png",
+  "./img/shield.png",
 ];
 
 export const getImg = (label) => {

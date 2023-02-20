@@ -1,0 +1,16 @@
+- `0.1` 2-20-2023 Test Version 
+  - Core game function complete
+Todo List
+- Bugs
+  - [ ] Sort the buffers
+  - [ ] Label Pool (So that every can be totally cleared)
+  - [ ] Button size and number uniform (Phone & PC)
+  - [ ] Remove bottom buttons
+  - [ ] Embed Game in Container
+- Features
+  - [ ] Add more images
+  - [ ] More button generator methods
+- Long Term Features
+  - [ ] Add RPG Elements
+  - [ ] Backtrack feature
+  - [ ] Different Difficulty

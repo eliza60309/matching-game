@@ -79,7 +79,7 @@ const CanvasElement = (props) => {
     let nowID = maxID;
     let nowCards = cards;
     let ret = {};
-    for(let i = 0; i < 3; i++) {
+    for(let i = 0; i < 10; i++) {
       ret = generateLayer({
         startX: 0,
         startY: 0,
@@ -111,7 +111,7 @@ const CanvasElement = (props) => {
       nowID = ret.nowID;
     }
 
-    for(let i = 0; i < 5; i++) {
+    /*for(let i = 0; i < 5; i++) {
       ret = generateLayer({
         startX: 0,
         startY: 500 + i * 10,
@@ -120,7 +120,7 @@ const CanvasElement = (props) => {
       }, nowCards, nowID);
       nowCards = ret.nowCards; 
       nowID = ret.nowID; 
-    }
+    }*/
 
     setMaxID(nowID);
     setCards(nowCards);
