@@ -1,15 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Card, ButtonElement } from "./button";
 import { link } from "../utils/linker";
+import { randLabel } from "../utils/img";
 
 const CanvasElement = (props) => {
+  const canvasRef = useRef(null);
+
   const [ buttons, setButtons ] = useState([]);
   const [ cards, setCards ] = useState([]);
   const [ toUnmount, setToUnmount ] = useState();
   const [ maxID, setMaxID ] = useState(0);
+  const [ buffer, setBuffer ] = useState([]);
+  const [ addbuffer, setAddBuffer ] = useState(-1);
+  const [ fail, setFail ] = useState(false);
 
   const generateLayer = (args, nowCards, nowID) => {
-    const { startX = 0, startY = 0, endX = props.width, endY = props.height, z = 0, size = 50} = args;
+    const dims = canvasRef.current?.getBoundingClientRect();
+
+    const { startX = 0, startY = 0, endX = dims.width, endY = dims.height, z = 0, size = 50} = args;
     let rows = Math.floor((endY - startY) / size);
     let cols = Math.floor((endX - startX) / size);
     let tmpCards = [...nowCards];
@@ -21,7 +29,9 @@ const CanvasElement = (props) => {
           X: { start: startX + j * size, end: startX + (j + 1) * size },
           Y: { start: startY + i * size, end: startY + (i + 1) * size },
           Z: z,
-        }, setToUnmount);
+          label: randLabel(),
+        }, receiveDestroy);
+//        }, setToUnmount);
         link(newCard, tmpCards);
         tmpCards.push(newCard);
         tmpID++;
@@ -30,32 +40,31 @@ const CanvasElement = (props) => {
     nowCards = tmpCards;
     nowID = tmpID;
     return {nowCards: nowCards, nowID: nowID};
-    //let link = new linker();
-    /*let buttonsArr = [];
-
-    let callbacks = (callbacksObject) => {
-      return callbacksObject;
-    }
-    for(let i = 0; i < rows; i++) {
-      let rowArr = [];
-      for(let j = 0; j < cols; j++) {
-        rowArr.push(<ButtonElement
-          XStart={pivotX + j * size}
-          XEnd={pivotX + j * size + 50}
-          YStart={pivotY + i * size}
-          YEnd={pivotY + i * size + 50}
-          Layer={z}
-          key={`${i} ${j}`}
-          text={z}
-          callbacks={callbacks}
-        />);
-      }
-      buttonsArr.push(rowArr);
-    }
-    return buttonsArr;*/
   };
   
-
+  useEffect(() => {
+    if(addbuffer === -1) {
+      return;
+    }
+    let tmpBuffer = [...buffer];
+    let cnt = 1;
+    tmpBuffer.forEach((label) => {
+      if(label === addbuffer) {
+        cnt++;
+      }
+    });
+    if(cnt == 3) {
+      tmpBuffer = tmpBuffer.filter((label) => { return label !== addbuffer });
+    }
+    else {
+      tmpBuffer = [...tmpBuffer, addbuffer];
+    }
+    if(tmpBuffer.length === 7) {
+      setFail(true);
+    }
+    setAddBuffer(-1);
+    setBuffer(tmpBuffer);
+  }, [addbuffer]);
 
   useEffect(() => {
     if(!toUnmount) {
@@ -66,6 +75,7 @@ const CanvasElement = (props) => {
   }, [toUnmount]);
 
   useEffect(() => {
+
     let nowID = maxID;
     let nowCards = cards;
     let ret = {};
@@ -114,7 +124,13 @@ const CanvasElement = (props) => {
 
     setMaxID(nowID);
     setCards(nowCards);
+
   }, []);
+
+  const receiveDestroy = (item) => {
+    setToUnmount(item);
+    setAddBuffer(item.args.label);
+  }
 
   return (  
     <div
@@ -124,6 +140,7 @@ const CanvasElement = (props) => {
         height: props.height,
         backgroundColor: props.color,
       }}
+      ref={canvasRef}
     >
       {cards.map((card) => {
         return (<ButtonElement
@@ -161,9 +178,9 @@ const CanvasElement = (props) => {
             backgroundColor: "lightgreen"
           }}
         >
-          {[0, 1, 2, -1, 4, 5, -1].map((imgLabel, index) => {
-              if(imgLabel == -1) {
-                return;
+          {buffer.map((imgLabel, index) => {
+              if(imgLabel === -1) {
+                return null;
               }
               return(
                 <ButtonElement
@@ -172,8 +189,8 @@ const CanvasElement = (props) => {
                     X: { start: 50 * index, end: 50 * (index + 1)},
                     Y: { start: 0, end: 50 },
                     Z: 1,
+                    label: imgLabel,
                   }}
-                  label={imgLabel}
                   onClick={() => {}}
                   enabled={true}
                   key={index}
@@ -181,6 +198,22 @@ const CanvasElement = (props) => {
             })}
         </div>
       </div>
+      {fail && 
+        (<div
+          style={{
+            opacity: "70%",
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            zIndex: 9999999,
+            backgroundColor: "grey",
+            fontSize: 100,
+            fontWeight: "bold",
+          }}
+        >You Failed</div>)}
     </div>
   );
 };

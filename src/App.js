@@ -8,15 +8,15 @@ function App() {
     <div className="App"
     style={{
       width: "100%",
-      height: "100%",
+      height: "100vh",
     }}
     >
       {/*<a href="https://www.flaticon.com/free-icons/maps-and-location" title="maps and location icons">
         Maps and location icons created by Freepik - Flaticon
   </a>*/}
       <CanvasElement
-        width={800}
-        height={800}
+        width={"100%"} //800
+        height={"100%"} //800
         color={"pink"}
       />
     </div>

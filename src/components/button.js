@@ -49,20 +49,6 @@ export class Card {
       //console.log(`Lock Created from ${card.args.id} to ${this.args.id}`);
       //console.log(`${this.args.id} has ${this.Locks.length} locks`);
     };
-
-    /*this.button = (<ButtonElement
-      XStart={this.args.X.start}
-      XEnd={this.args.X.end}
-      YStart={this.args.Y.start}
-      YEnd={this.args.Y.end}
-      Layer={this.args.Z}
-      text={this.args.Z}
-      onClick={this.onClick}
-      key={this.args.id}
-      enabled={this.enabled}
-      card={this}
-      test={this.args.test}
-    />);*/
   }
 
   
@@ -92,11 +78,11 @@ export const ButtonElement = (props) => {
         fontSize: 30
       }}  
       onClick={props.onClick}
-      label={props.label}
+      label={args.label}
     > 
       {/*props.text*/}
       <img 
-        src={getImg(props.label)}
+        src={getImg(args.label)}
         style={{
           width: args.X.end - args.X.start - 20,
           height: args.Y.end - args.Y.start - 20,
