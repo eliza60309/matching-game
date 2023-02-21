@@ -56,6 +56,10 @@ const CanvasElement = (props) => {
     if(cnt == 3) {
       tmpBuffer = tmpBuffer.filter((label) => { return label !== addbuffer });
     }
+    else if(cnt == 2) {
+      tmpBuffer.splice(tmpBuffer.indexOf(addbuffer), 0, addbuffer);
+      tmpBuffer = [...tmpBuffer];
+    }
     else {
       tmpBuffer = [...tmpBuffer, addbuffer];
     }
@@ -75,11 +79,10 @@ const CanvasElement = (props) => {
   }, [toUnmount]);
 
   useEffect(() => {
-
     let nowID = maxID;
     let nowCards = cards;
     let ret = {};
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < 5; i++) {
       ret = generateLayer({
         startX: 0,
         startY: 0,
@@ -110,6 +113,7 @@ const CanvasElement = (props) => {
       nowCards = ret.nowCards; 
       nowID = ret.nowID;
     }
+    console.log(nowID);
 
     /*for(let i = 0; i < 5; i++) {
       ret = generateLayer({
@@ -137,6 +141,7 @@ const CanvasElement = (props) => {
       style={{
         position: "relative",
         width: props.width,
+        minWidth: 400,
         height: props.height,
         backgroundColor: props.color,
       }}
@@ -213,6 +218,7 @@ const CanvasElement = (props) => {
             fontSize: 100,
             fontWeight: "bold",
           }}
+          onClick={() => window.location.reload(false)}
         >You Failed</div>)}
     </div>
   );

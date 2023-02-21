@@ -58,10 +58,12 @@ export const ButtonElement = (props) => {
   const { args, enabled } = props;
 
   return (
-    <button
+    <div
       style={{
         borderWidth: 1,
         borderRadius: 5,
+        borderStyle: "solid",
+        borderColor: "darkgrey",
         transition: "background-color 0.5s",
         backgroundColor: enabled? "lightblue": "grey",
         display: "flex",
@@ -69,10 +71,10 @@ export const ButtonElement = (props) => {
         alignItems: "center",
         justifyContent: "center",
 
-        width: args.X.end - args.X.start,
-        height: args.Y.end - args.Y.start,
-        top: args.Y.start,
-        left: args.X.start,
+        width: args.X.end - args.X.start - 2,
+        height: args.Y.end - args.Y.start - 2,
+        top: args.Y.start + 1,
+        left: args.X.start + 1,
         zIndex: args.Z,
 
         fontSize: 30
@@ -84,8 +86,8 @@ export const ButtonElement = (props) => {
       <img 
         src={getImg(args.label)}
         style={{
-          width: args.X.end - args.X.start - 20,
-          height: args.Y.end - args.Y.start - 20,
+          width: (args.X.end - args.X.start - 2) * 0.6,
+          height: (args.Y.end - args.Y.start - 2) * 0.6,
         }}
       />
       <div
@@ -100,6 +102,6 @@ export const ButtonElement = (props) => {
         }}
       >
       </div>
-    </button>
+    </div>
   );
 }

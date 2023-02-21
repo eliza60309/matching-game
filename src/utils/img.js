@@ -18,7 +18,12 @@ const imgList = [
 ];
 
 export const getImg = (label) => {
-  return imgList[label];
+  if(label === -1) {
+    return "";
+  }
+  else {
+    return imgList[label];
+  }
 };
 
 export const randLabel = () => {
