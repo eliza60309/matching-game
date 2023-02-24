@@ -11,6 +11,7 @@ Todo List
   - [ ] Label Pool (So that every can be totally cleared)
   - [ ] Button size and number uniform (Phone & PC)
   - [ ] Embed Game in Container
+  - [ ] Improve button reaction time
 - Features
   - [ ] Add more images
   - [ ] More button generator methods

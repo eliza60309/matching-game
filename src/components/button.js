@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getImg } from "../utils/img";
+import styles from "./button.module.css";
 
 export class Card {
   constructor(args, destroy) {
@@ -59,6 +60,7 @@ export const ButtonElement = (props) => {
 
   return (
     <div
+      className={styles.button}
       style={{
         borderWidth: 1,
         borderRadius: 5,
@@ -73,8 +75,8 @@ export const ButtonElement = (props) => {
 
         width: args.X.end - args.X.start - 2,
         height: args.Y.end - args.Y.start - 2,
-        top: args.Y.start + 1,
-        left: args.X.start + 1,
+        top: args.Y.start,
+        left: args.X.start,
         zIndex: args.Z,
 
         fontSize: 30
