@@ -20,7 +20,7 @@ function App() {
   </a>*/}
       <CanvasElement
         width={400} //800
-        height={700} //800
+        height={"100vh"} //800
         color={"pink"}
       />
     </div>
