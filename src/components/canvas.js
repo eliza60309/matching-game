@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Card, ButtonElement } from "./button";
 import { link } from "../utils/linker";
-import { randLabel, LabelGenerator } from "../utils/img";
+import { LabelGenerator } from "../utils/img";
 
 const CanvasElement = (props) => {
   const canvasRef = useRef(null);
