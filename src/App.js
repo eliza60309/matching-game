@@ -12,14 +12,15 @@ function App() {
     style={{
       width: "100%",
       height: "100vh",
+      backgroundColor: "pink"
     }}
     >
       {/*<a href="https://www.flaticon.com/free-icons/maps-and-location" title="maps and location icons">
         Maps and location icons created by Freepik - Flaticon
   </a>*/}
       <CanvasElement
-        width={"100%"} //800
-        height={"100%"} //800
+        width={400} //800
+        height={800} //800
         color={"pink"}
       />
     </div>

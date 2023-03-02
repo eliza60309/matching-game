@@ -5,11 +5,12 @@
   - Removed Bottom buttons
   - Buffer have same labels neighbored
   - Added more images
+- `0.1.2` 3-2-2023 Test Version
+  - Label Pool (So that every can be totally cleared)
+  - Button size and number uniform (Phone & PC)
 
 Todo List
 - Bugs
-  - [ ] Label Pool (So that every can be totally cleared)
-  - [ ] Button size and number uniform (Phone & PC)
   - [ ] Embed Game in Container
   - [ ] Improve button reaction time
 - Features

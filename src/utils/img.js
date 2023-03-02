@@ -30,3 +30,37 @@ export const randLabel = () => {
   let label = Math.floor(Math.random() * imgList.length);
   return label;
 }
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+export class LabelGenerator{
+  constructor(total) {
+    this.total = total;
+    this.assigned = 0;
+    this.array = Array.from({ length: total })
+    let tmplabel = 0;
+    this.array = this.array.map((_, index) => {
+      if(index % 3 === 0) {
+        tmplabel = randLabel();
+      }
+      return tmplabel;
+    });
+
+    this.array = shuffleArray(this.array);
+
+
+    this.rand = () => {
+      let label = this.array[this.assigned];
+      this.assigned++;
+      return label;
+    }
+  }
+
+
+}

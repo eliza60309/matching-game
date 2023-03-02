@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Card, ButtonElement } from "./button";
 import { link } from "../utils/linker";
-import { randLabel } from "../utils/img";
+import { randLabel, LabelGenerator } from "../utils/img";
 
 const CanvasElement = (props) => {
   const canvasRef = useRef(null);
@@ -13,8 +13,9 @@ const CanvasElement = (props) => {
   const [ buffer, setBuffer ] = useState([]);
   const [ addbuffer, setAddBuffer ] = useState(-1);
   const [ fail, setFail ] = useState(false);
+  const totalCards = 567;
 
-  const generateLayer = (args, nowCards, nowID) => {
+  const generateLayer = (args, nowCards, nowID, labelGenerator) => {
     const dims = canvasRef.current?.getBoundingClientRect();
 
     const { startX = 0, startY = 0, endX = dims.width, endY = dims.height, z = 0, size = 50} = args;
@@ -22,14 +23,14 @@ const CanvasElement = (props) => {
     let cols = Math.floor((endX - startX) / size);
     let tmpCards = [...nowCards];
     let tmpID = nowID;
-    for(let i = 0; i < rows; i++) {
-      for(let j = 0; j < cols; j++) {
+    for(let i = 0; i < rows && tmpID < totalCards; i++) {
+      for(let j = 0; j < cols && tmpID < totalCards; j++) {
         let newCard = new Card({
           id: tmpID,
           X: { start: startX + j * size, end: startX + (j + 1) * size },
           Y: { start: startY + i * size, end: startY + (i + 1) * size },
           Z: z,
-          label: randLabel(),
+          label: labelGenerator.rand(),
         }, receiveDestroy);
 //        }, setToUnmount);
         link(newCard, tmpCards);
@@ -81,14 +82,15 @@ const CanvasElement = (props) => {
   useEffect(() => {
     let nowID = maxID;
     let nowCards = cards;
+    let labelGenerator = new LabelGenerator(totalCards);
     let ret = {};
-    for(let i = 0; i < 5; i++) {
+    for(let i = 0; i < 100 && nowID <= totalCards; i++) {
       ret = generateLayer({
         startX: 0,
         startY: 0,
         endY: 400,
         z:i * 2 + 1
-      }, nowCards, nowID);
+      }, nowCards, nowID, labelGenerator);
       nowCards = ret.nowCards; 
       nowID = ret.nowID;
 
@@ -109,7 +111,7 @@ const CanvasElement = (props) => {
         startY: 25,
         endY: 400,
         z:i * 2 + 2
-      }, nowCards, nowID);
+      }, nowCards, nowID, labelGenerator);
       nowCards = ret.nowCards; 
       nowID = ret.nowID;
     }
