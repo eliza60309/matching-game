@@ -36,8 +36,9 @@ export const generateLayer = (args, cardsInfo, labelGenerator, callbacks) => {
   }
   return {
     allCards: tmpAllCards,
-    relatedCards: discardRelated? newCards: tmpRelatedCards,
+    relatedCards: discardRelated? [...newCards]: tmpRelatedCards,
     cardsCount: tmpCount,
-    cardsLimit: cardsLimit
+    cardsLimit: cardsLimit,
+    newCards: [...newCards],
   };
 };

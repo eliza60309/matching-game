@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { getImg } from "../utils/img";
 import styles from "./button.module.css";
 
@@ -11,6 +11,7 @@ export class Card {
     this.destroy = destroy;
     this.bottom = true;
     this.top = true;
+    this.render = false;
 
     this.onClick = () => {
       if(this.clickable) {
@@ -33,13 +34,9 @@ export class Card {
       if(this.Locks.length === 0) {
         this.clickable = true;
         this.top = true;
-
+        this.Links.map((card) => card.notifyTop());
       }
-      // else {
-      //   this.clickable = false;
-      // }
       //console.log(`${this.args.id} has ${this.Locks.length} locks`);
-
     };
   
     this.notifyLinkCreate = (card) => {
@@ -56,6 +53,16 @@ export class Card {
       //console.log(`Lock Created from ${card.args.id} to ${this.args.id}`);
       //console.log(`${this.args.id} has ${this.Locks.length} locks`);
     };
+
+    this.notifyTop = () => {
+      this.render = true;
+    };
+
+    this.topLayer = () => {
+      this.top = true;
+      this.render = true;
+      this.Links.map((card) => card.notifyTop());
+    }
   }
 
   

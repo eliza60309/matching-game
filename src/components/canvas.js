@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Card, ButtonElement } from "./button";
-import { link } from "../utils/linker";
+import { ButtonElement } from "./button";
+//import { link } from "../utils/linker";
 import { LabelGenerator } from "../utils/img";
 
 import { generateLayer } from "../utils/generator";
@@ -8,42 +8,13 @@ import { generateLayer } from "../utils/generator";
 const CanvasElement = (props) => {
   const canvasRef = useRef(null);
 
-  //const [ buttons, setButtons ] = useState([]);
   const [ cards, setCards ] = useState([]);
   const [ toUnmount, setToUnmount ] = useState();
   const [ cardsCount, setCardsCount ] = useState(0);
   const [ buffer, setBuffer ] = useState([]);
   const [ addbuffer, setAddBuffer ] = useState(-1);
   const [ fail, setFail ] = useState(false);
-  const cardsLimit = 567;
-
-//   const generateLayer = (args, nowCards, nowID, labelGenerator) => {
-//     const dims = canvasRef.current?.getBoundingClientRect();
-
-//     const { startX = 0, startY = 0, endX = dims.width, endY = dims.height, z = 0, size = 50} = args;
-//     let rows = Math.floor((endY - startY) / size);
-//     let cols = Math.floor((endX - startX) / size);
-//     let tmpCards = [...nowCards];
-//     let tmpID = nowID;
-//     for(let i = 0; i < rows && tmpID < totalCards; i++) {
-//       for(let j = 0; j < cols && tmpID < totalCards; j++) {
-//         let newCard = new Card({
-//           id: tmpID,
-//           X: { start: startX + j * size, end: startX + (j + 1) * size },
-//           Y: { start: startY + i * size, end: startY + (i + 1) * size },
-//           Z: z,
-//           label: labelGenerator.rand(),
-//         }, receiveDestroy);
-// //        }, setToUnmount);
-//         link(newCard, tmpCards);
-//         tmpCards.push(newCard);
-//         tmpID++;
-//       }
-//     }
-//     nowCards = tmpCards;
-//     nowID = tmpID;
-//     return {nowCards: nowCards, nowID: nowID};
-//   };
+  const cardsLimit = 1000;
   
   useEffect(() => {
     if(addbuffer === -1) {
@@ -56,10 +27,10 @@ const CanvasElement = (props) => {
         cnt++;
       }
     });
-    if(cnt == 3) {
+    if(cnt === 3) {
       tmpBuffer = tmpBuffer.filter((label) => { return label !== addbuffer });
     }
-    else if(cnt == 2) {
+    else if(cnt === 2) {
       tmpBuffer.splice(tmpBuffer.indexOf(addbuffer), 0, addbuffer);
       tmpBuffer = [...tmpBuffer];
     }
@@ -77,7 +48,6 @@ const CanvasElement = (props) => {
     if(!toUnmount) {
       return;
     }
-    //setButtons(buttons.filter((button) => button.key !== toUnmount.args.id.toString()));
     setCards(cards.filter((card) => card.args.id !== toUnmount.args.id));
   }, [toUnmount]);
 
@@ -90,28 +60,23 @@ const CanvasElement = (props) => {
       cardsLimit: cardsLimit,
       discardRelated: true
     };
-    for(let i = 0; i < 100 && cardsInfo.cardsCount < cardsLimit; i++) {
+    for(let i = 1; i < 13 && cardsInfo.cardsCount < cardsLimit; i++) {
+      let pivot = i % 2 === 0? 25: 0;
       cardsInfo = generateLayer({
-        X: { start: 0, end: 400 },
-        Y: { start: 0, end: 400 },
-        Z: i * 2 + 1,
-        size: 50
-      }, cardsInfo, labelGenerator, {
-        notifyGameCardDestroy: receiveDestroy
-      });
-      cardsInfo = generateLayer({
-        X: { start: 25, end: 400 },
-        Y: { start: 25, end: 400 },
-        Z: i * 2 + 2,
+        X: { start: pivot, end: 400 },
+        Y: { start: pivot, end: 400 },
+        Z: i,
         size: 50
       }, cardsInfo, labelGenerator, {
         notifyGameCardDestroy: receiveDestroy
       });
     }
-    console.log(cardsInfo.cardsCount);
+    cardsInfo.newCards.map((card) => card.topLayer());
 
     setCardsCount(cardsInfo.cardsCount);
     setCards(cardsInfo.allCards);
+
+    console.log(cardsInfo.cardsCount);
 
   }, []);
 
@@ -132,9 +97,9 @@ const CanvasElement = (props) => {
       ref={canvasRef}
     >
       {cards.map((card) => {
-        // if(!card.top) {
-        //   return null;
-        // }
+        if(!card.render) {
+          return null;
+        }
         return (<ButtonElement
           args={card.args}
           label={card.args.Z}
