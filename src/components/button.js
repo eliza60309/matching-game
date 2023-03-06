@@ -9,6 +9,8 @@ export class Card {
     this.Locks = [];
     this.clickable = true;
     this.destroy = destroy;
+    this.bottom = true;
+    this.top = true;
 
     this.onClick = () => {
       if(this.clickable) {
@@ -30,16 +32,19 @@ export class Card {
       this.Locks = this.Locks.filter((card) => card.args.id !== destroyedCard.args.id );
       if(this.Locks.length === 0) {
         this.clickable = true;
+        this.top = true;
+
       }
-      else {
-        this.clickable = false;
-      }
+      // else {
+      //   this.clickable = false;
+      // }
       //console.log(`${this.args.id} has ${this.Locks.length} locks`);
 
     };
   
     this.notifyLinkCreate = (card) => {
       this.Links.push(card);
+      this.bottom = false;
       //console.log(`Link Created from ${this.args.id} to ${card.args.id}`);
       //console.log(`${this.args.id} has ${this.Links.length} links`);
     };
@@ -47,6 +52,7 @@ export class Card {
     this.notifyLockCreate = (card) => {
       this.Locks.push(card);
       this.clickable = false;
+      this.top = false;
       //console.log(`Lock Created from ${card.args.id} to ${this.args.id}`);
       //console.log(`${this.args.id} has ${this.Locks.length} locks`);
     };

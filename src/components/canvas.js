@@ -3,45 +3,47 @@ import { Card, ButtonElement } from "./button";
 import { link } from "../utils/linker";
 import { LabelGenerator } from "../utils/img";
 
+import { generateLayer } from "../utils/generator";
+
 const CanvasElement = (props) => {
   const canvasRef = useRef(null);
 
-  const [ buttons, setButtons ] = useState([]);
+  //const [ buttons, setButtons ] = useState([]);
   const [ cards, setCards ] = useState([]);
   const [ toUnmount, setToUnmount ] = useState();
-  const [ maxID, setMaxID ] = useState(0);
+  const [ cardsCount, setCardsCount ] = useState(0);
   const [ buffer, setBuffer ] = useState([]);
   const [ addbuffer, setAddBuffer ] = useState(-1);
   const [ fail, setFail ] = useState(false);
-  const totalCards = 567;
+  const cardsLimit = 567;
 
-  const generateLayer = (args, nowCards, nowID, labelGenerator) => {
-    const dims = canvasRef.current?.getBoundingClientRect();
+//   const generateLayer = (args, nowCards, nowID, labelGenerator) => {
+//     const dims = canvasRef.current?.getBoundingClientRect();
 
-    const { startX = 0, startY = 0, endX = dims.width, endY = dims.height, z = 0, size = 50} = args;
-    let rows = Math.floor((endY - startY) / size);
-    let cols = Math.floor((endX - startX) / size);
-    let tmpCards = [...nowCards];
-    let tmpID = nowID;
-    for(let i = 0; i < rows && tmpID < totalCards; i++) {
-      for(let j = 0; j < cols && tmpID < totalCards; j++) {
-        let newCard = new Card({
-          id: tmpID,
-          X: { start: startX + j * size, end: startX + (j + 1) * size },
-          Y: { start: startY + i * size, end: startY + (i + 1) * size },
-          Z: z,
-          label: labelGenerator.rand(),
-        }, receiveDestroy);
-//        }, setToUnmount);
-        link(newCard, tmpCards);
-        tmpCards.push(newCard);
-        tmpID++;
-      }
-    }
-    nowCards = tmpCards;
-    nowID = tmpID;
-    return {nowCards: nowCards, nowID: nowID};
-  };
+//     const { startX = 0, startY = 0, endX = dims.width, endY = dims.height, z = 0, size = 50} = args;
+//     let rows = Math.floor((endY - startY) / size);
+//     let cols = Math.floor((endX - startX) / size);
+//     let tmpCards = [...nowCards];
+//     let tmpID = nowID;
+//     for(let i = 0; i < rows && tmpID < totalCards; i++) {
+//       for(let j = 0; j < cols && tmpID < totalCards; j++) {
+//         let newCard = new Card({
+//           id: tmpID,
+//           X: { start: startX + j * size, end: startX + (j + 1) * size },
+//           Y: { start: startY + i * size, end: startY + (i + 1) * size },
+//           Z: z,
+//           label: labelGenerator.rand(),
+//         }, receiveDestroy);
+// //        }, setToUnmount);
+//         link(newCard, tmpCards);
+//         tmpCards.push(newCard);
+//         tmpID++;
+//       }
+//     }
+//     nowCards = tmpCards;
+//     nowID = tmpID;
+//     return {nowCards: nowCards, nowID: nowID};
+//   };
   
   useEffect(() => {
     if(addbuffer === -1) {
@@ -75,61 +77,41 @@ const CanvasElement = (props) => {
     if(!toUnmount) {
       return;
     }
-    setButtons(buttons.filter((button) => button.key !== toUnmount.args.id.toString()));
+    //setButtons(buttons.filter((button) => button.key !== toUnmount.args.id.toString()));
     setCards(cards.filter((card) => card.args.id !== toUnmount.args.id));
   }, [toUnmount]);
 
   useEffect(() => {
-    let nowID = maxID;
-    let nowCards = cards;
-    let labelGenerator = new LabelGenerator(totalCards);
-    let ret = {};
-    for(let i = 0; i < 100 && nowID <= totalCards; i++) {
-      ret = generateLayer({
-        startX: 0,
-        startY: 0,
-        endY: 400,
-        z:i * 2 + 1
-      }, nowCards, nowID, labelGenerator);
-      nowCards = ret.nowCards; 
-      nowID = ret.nowID;
-
-      // if(i == 3) {
-      //   ret = generateLayer({
-      //     startX: 25,
-      //     startY: 25,
-      //     endY: 400,
-      //     size: 100,
-      //     z:i * 2 + 2
-      //   }, nowCards, nowID);
-      //   nowCards = ret.nowCards; 
-      //   nowID = ret.nowID;
-      //   continue;
-      // }
-      ret = generateLayer({
-        startX: 25,
-        startY: 25,
-        endY: 400,
-        z:i * 2 + 2
-      }, nowCards, nowID, labelGenerator);
-      nowCards = ret.nowCards; 
-      nowID = ret.nowID;
+    let labelGenerator = new LabelGenerator(cardsLimit);
+    let cardsInfo = {
+      allCards: cards,
+      relatedCards: [],
+      cardsCount: cardsCount,
+      cardsLimit: cardsLimit,
+      discardRelated: true
+    };
+    for(let i = 0; i < 100 && cardsInfo.cardsCount < cardsLimit; i++) {
+      cardsInfo = generateLayer({
+        X: { start: 0, end: 400 },
+        Y: { start: 0, end: 400 },
+        Z: i * 2 + 1,
+        size: 50
+      }, cardsInfo, labelGenerator, {
+        notifyGameCardDestroy: receiveDestroy
+      });
+      cardsInfo = generateLayer({
+        X: { start: 25, end: 400 },
+        Y: { start: 25, end: 400 },
+        Z: i * 2 + 2,
+        size: 50
+      }, cardsInfo, labelGenerator, {
+        notifyGameCardDestroy: receiveDestroy
+      });
     }
-    console.log(nowID);
+    console.log(cardsInfo.cardsCount);
 
-    /*for(let i = 0; i < 5; i++) {
-      ret = generateLayer({
-        startX: 0,
-        startY: 500 + i * 10,
-        endY: 570,
-        z:i
-      }, nowCards, nowID);
-      nowCards = ret.nowCards; 
-      nowID = ret.nowID; 
-    }*/
-
-    setMaxID(nowID);
-    setCards(nowCards);
+    setCardsCount(cardsInfo.cardsCount);
+    setCards(cardsInfo.allCards);
 
   }, []);
 
@@ -150,13 +132,16 @@ const CanvasElement = (props) => {
       ref={canvasRef}
     >
       {cards.map((card) => {
+        // if(!card.top) {
+        //   return null;
+        // }
         return (<ButtonElement
           args={card.args}
           label={card.args.Z}
           onClick={card.onClick}
           key={card.args.id}
           enabled={card.clickable}
-          />);
+        />);
       })}
       <div
         style={{
