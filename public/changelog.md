@@ -8,11 +8,12 @@
 - `0.1.2` 3-2-2023 Test Version
   - Label Pool (So that every can be totally cleared)
   - Button size and number uniform (Phone & PC)
+- `0.1.3` 3-6-2023 Test Version
+  - Improve button reaction time (reduce rendered buttons)
 
 Todo List
 - Bugs
   - [ ] Embed Game in Container
-  - [ ] Improve button reaction time
 - Features
   - [ ] Add more images
   - [ ] More button generator methods

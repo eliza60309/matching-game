@@ -14,7 +14,7 @@ const CanvasElement = (props) => {
   const [ buffer, setBuffer ] = useState([]);
   const [ addbuffer, setAddBuffer ] = useState(-1);
   const [ fail, setFail ] = useState(false);
-  const cardsLimit = 1000;
+  const cardsLimit = 678;
   
   useEffect(() => {
     if(addbuffer === -1) {
