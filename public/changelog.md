@@ -10,11 +10,14 @@
   - Button size and number uniform (Phone & PC)
 - `0.1.3` 3-6-2023 Test Version
   - Improve button reaction time (reduce rendered buttons)
+- `0.1.4` 6-2-2023 Test Version
+  - Enabled both render mode
 
 Todo List
 - Bugs
   - [ ] Embed Game in Container
 - Features
+  - [ ] Toggle render modes
   - [ ] Add more images
   - [ ] More button generator methods
 - Long Term Features

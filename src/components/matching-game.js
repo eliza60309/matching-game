@@ -5,8 +5,8 @@ import { LabelGenerator } from "../utils/img";
 
 import { generateLayer } from "../utils/generator";
 
-const CanvasElement = (props) => {
-  const canvasRef = useRef(null);
+const MatchingGame = (props) => {
+  //const canvasRef = useRef(null);
 
   const [ cards, setCards ] = useState([]);
   const [ toUnmount, setToUnmount ] = useState();
@@ -14,8 +14,12 @@ const CanvasElement = (props) => {
   const [ buffer, setBuffer ] = useState([]);
   const [ addbuffer, setAddBuffer ] = useState(-1);
   const [ fail, setFail ] = useState(false);
-  const cardsLimit = 678;
+  const [ win, setWin ] = useState(0);
+  const cardsLimit = 226 * 3;
+
+  const renderMode = props.renderMode?? "all";
   
+  // The function of the buffer
   useEffect(() => {
     if(addbuffer === -1) {
       return;
@@ -80,6 +84,16 @@ const CanvasElement = (props) => {
 
   }, []);
 
+
+  useEffect(() => {
+    if(win === 1 && cards.length === 0) {
+      setWin(2);
+    }
+    if(cards.length > 0) {
+      setWin(1);
+    }
+  }, [cards]);
+
   const receiveDestroy = (item) => {
     setToUnmount(item);
     setAddBuffer(item.args.label);
@@ -94,20 +108,35 @@ const CanvasElement = (props) => {
         height: props.height,
         backgroundColor: props.color,
       }}
-      ref={canvasRef}
+      //ref={canvasRef}
     >
-      {cards.map((card) => {
-        if(!card.render) {
-          return null;
-        }
-        return (<ButtonElement
-          args={card.args}
-          label={card.args.Z}
-          onClick={card.onClick}
-          key={card.args.id}
-          enabled={card.clickable}
-        />);
-      })}
+      {
+        renderMode === "limit" && cards.map((card) => {
+          if(!card.render) {
+            return null;
+          }
+          return (<ButtonElement
+            args={card.args}
+            label={card.args.Z}
+            onClick={card.onClick}
+            key={card.args.id}
+            enabled={card.clickable}
+          />);
+        })
+      }
+
+      {
+        renderMode === "all" && cards.map((card) => {
+          return (<ButtonElement
+            args={card.args}
+            label={card.args.Z}
+            onClick={card.onClick}
+            key={card.args.id}
+            enabled={card.clickable}
+          />);
+        })
+      }
+      
       <div
         style={{
           position: "absolute",
@@ -117,7 +146,8 @@ const CanvasElement = (props) => {
           bottom: "0%",
           width: "100%",
           height: "200px",
-          backgroundColor: "lightblue"
+          backgroundColor: "lightblue",
+          flexDirection: "column"
           
         }}
       >
@@ -127,11 +157,11 @@ const CanvasElement = (props) => {
             borderColor: "black",
             borderStyle: "solid",
             borderRadius: "5px",
-            position: "absolute",
+            position: "relative",
             width: "350px",
             height: "50px",
-            display: "block",
-            
+            //display: "block",
+            display: "flex",
             backgroundColor: "lightgreen"
           }}
         >
@@ -172,7 +202,24 @@ const CanvasElement = (props) => {
           }}
           onClick={() => window.location.reload(false)}
         >You Failed</div>)}
+      {win === 2 && 
+        (<div
+          style={{
+            opacity: "70%",
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+            zIndex: 9999999,
+            backgroundColor: "lightgreen",
+            fontSize: 100,
+            fontWeight: "bold",
+          }}
+          onClick={() => window.location.reload(false)}
+        >You Won</div>)}
     </div>
   );
 };
-export default CanvasElement;
+export default MatchingGame;
